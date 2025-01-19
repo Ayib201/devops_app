@@ -4,9 +4,8 @@ pipeline {
     environment {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app"
-	SONARQUBE_URL = 'http://host.docker.internal:9000' // URL de votre serveur SonarQube
+        SONARQUBE_URL = 'http://host.docker.internal:9000' // URL de votre serveur SonarQube
         SONARQUBE_CREDENTIALS_ID = 'jenkins-sonar' // L'ID des credentials pour le token SonarQube
-	    
     }
 
     tools {
@@ -27,24 +26,13 @@ pipeline {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
                         sh 'mvn clean install'
+                        sh 'ls -l target' 
                     }
                 }
             }
         }
 
-        
-
-	stage('Compile') {
-	    steps {
-	        dir('backend') {
-	            script {
-	                sh 'mvn clean compile'  // Compiler le projet
-	            }
-	        }
-	    }
-	}
-
-	stage('Test') {
+        stage('Test') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven test
                     script {
@@ -54,15 +42,24 @@ pipeline {
                 }
             }
         }
-	    
+
+        stage('Compile') {
+            steps {
+                dir('backend') {
+                    script {
+                        // Compiler le projet
+                        sh 'mvn clean compile'
+                    }
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
-		
-                	withSonarQubeEnv(installationName: 'sq1') {
-				sh "mvn clean sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.java.binaries=target/classes"
-
-	                }
+                    withSonarQubeEnv(installationName: 'sq1') {
+                        sh "mvn clean sonar:sonar"
+                    }
                 }
             }
         }
