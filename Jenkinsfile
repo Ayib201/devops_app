@@ -79,11 +79,24 @@ pipeline {
         //    }
         //}
 
-        stage('Deploy') {
+        stage('Deploy Backend') {
             steps {
                 script {
-                    // Déployer sur AWS avec Docker
-                    sh 'docker run -d -p 8080:8080 $REGISTRY/$IMAGE_NAME'
+                    // Déployer l'application backend Spring Boot
+                    sh 'java -jar backend/target/factorial-app.jar &'
+                }
+            }
+        }
+
+        stage('Deploy Frontend') {
+            steps {
+                script {
+                    // Copier les fichiers du frontend (HTML, CSS, JS) dans le répertoire du serveur
+                    // Exemple pour un déploiement simple avec un serveur Apache ou Nginx
+                    sh '''
+                    mkdir -p /var/www/html/factorial-app
+                    cp -r frontend/* /var/www/html/factorial-app/
+                    '''
                 }
             }
         }
