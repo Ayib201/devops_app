@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8-jdk-21'
-            args '-v /root/.m2:/root/.m2'  // Pour persister le cache de Maven entre les builds
-        }
-    }
+    agent any
 
     environment {
         REGISTRY = "mydockerhub/factorial-app"
