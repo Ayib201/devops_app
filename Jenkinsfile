@@ -58,7 +58,9 @@ pipeline {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
                     withSonarQubeEnv(installationName: 'sq1') {
-                        sh "mvn clean sonar:sonar -Dsonar.java.binaries=target/classes"
+                        script {
+                            sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
+                        }
                     }
                 }
             }
