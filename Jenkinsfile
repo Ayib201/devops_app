@@ -71,10 +71,10 @@ pipeline {
             steps {
                 script {
                     // Utiliser Docker pour exécuter Terraform
-                    sh '''
-                    docker run --rm -v $(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest init
-                    docker run --rm -v $(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest apply -auto-approve
-                    '''
+                    sh """
+                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest init
+                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest apply -auto-approve
+                    """
                 }
             }
         }
@@ -83,7 +83,7 @@ pipeline {
             steps {
                 script {
                     // Récupérer l'IP publique de l'instance et déployer l'application backend sur cette instance
-                    def public_ip = sh(script: "docker run --rm -v $(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
+                    def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
                     // Transférer le fichier JAR de l'application backend
                     sh """
                     scp -i /terraform/terraformkey.pem backend/target/factorial-app.jar ec2-user@$public_ip:/home/ec2-user/
@@ -97,7 +97,7 @@ pipeline {
             steps {
                 script {
                     // Récupérer l'IP publique de l'instance et déployer les fichiers frontend
-                    def public_ip = sh(script: "docker run --rm -v $(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
+                    def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
                     // Copier les fichiers du frontend sur le serveur EC2
                     sh """
                     scp -i /terraform/terraformkey.pem -r frontend/* ec2-user@$public_ip:/var/www/html/factorial-app/
