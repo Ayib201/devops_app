@@ -1,13 +1,15 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.6'  // Le nom de l'outil Maven configuré
-    }
+    
 
     environment {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app"
+    }
+
+    tools {
+        maven 'Maven 3.6'  // Le nom de l'outil Maven configuré
     }
 
     stages {
