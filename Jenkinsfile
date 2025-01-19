@@ -19,6 +19,7 @@ pipeline {
                     // Entrer dans le répertoire backend avant d'exécuter la commande mvn
                     dir('backend') {
                         // Construire l'application
+                        sh 'mvn -version'
                         sh 'mvn clean install'
                     }
                 }
