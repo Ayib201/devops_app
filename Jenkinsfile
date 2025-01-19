@@ -46,10 +46,10 @@ pipeline {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
                     withSonarQubeEnv(installationName: 'SonarQubeServer') {
 			sh """
-	                    mvn clean verify sonar:sonar \
-	                    -Dsonar.projectKey=factorial \
-	                    -Dsonar.projectName='factorial' \
-	                    -Dsonar.host.url='http://localhost:9000'
+	                mvn clean verify sonar:sonar \
+		        -Dsonar.projectKey=factorial \
+		        -Dsonar.projectName='factorial' \
+		        -Dsonar.host.url='http://localhost:9000'
 	                """
                     }
                 }
