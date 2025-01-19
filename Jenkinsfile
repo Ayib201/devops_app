@@ -16,6 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    echo "Début de la construction"
                     // Utiliser une image Docker Maven avec JDK 21 pour construire l'application
                     docker.image('maven:3.8-jdk-21').inside {
                         dir('backend') {
@@ -24,6 +25,7 @@ pipeline {
                             sh 'mvn clean install'
                         }
                     }
+                    echo "Fin de la construction"
                 }
             }
         }
