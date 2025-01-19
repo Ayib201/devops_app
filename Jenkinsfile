@@ -16,8 +16,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Construire l'application
-                    sh 'mvn clean install'
+                    // Entrer dans le répertoire backend avant d'exécuter la commande mvn
+                    dir('backend') {
+                        // Construire l'application
+                        sh 'mvn clean install'
+                    }
                 }
             }
         }
@@ -25,8 +28,11 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Lancer les tests
-                    sh 'mvn test'
+                    // Entrer dans le répertoire backend pour lancer les tests
+                    dir('backend') {
+                        // Lancer les tests
+                        sh 'mvn test'
+                    }
                 }
             }
         }
@@ -34,8 +40,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Analyser le code avec SonarQube
-                    sh 'mvn sonar:sonar'
+                    // Entrer dans le répertoire backend pour analyser avec SonarQube
+                    dir('backend') {
+                        // Analyser le code avec SonarQube
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
