@@ -66,6 +66,16 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
