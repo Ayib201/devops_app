@@ -4,6 +4,7 @@ pipeline {
     environment {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app" 
+	    
     }
 
     tools {
@@ -44,12 +45,7 @@ pipeline {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
                     withSonarQubeEnv(credentialsId: 'factorial-token') {
-			sh """
-                  	mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=factorial \
-                        -Dsonar.projectName='factorial' \
-                        -Dsonar.host.url='http://localhost:9000'
-                    	"""
+			sh "mvn sonar:sonar"
                     }
                 }
             }
