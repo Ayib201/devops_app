@@ -9,7 +9,7 @@ pipeline {
     }
 
     tools {
-        maven 'Maven 3.6'  // Le nom de l'outil Maven configuré
+        maven 'Maven 3.9'  // Le nom de l'outil Maven configuré
     }
 
     stages {
