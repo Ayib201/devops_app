@@ -12,15 +12,17 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Build') {
             steps {
                 script {
-                    // Entrer dans le répertoire backend avant d'exécuter la commande mvn
-                    dir('backend') {
-                        // Construire l'application
-                        sh 'mvn -version'
-                        sh 'mvn clean install'
+                    // Utiliser une image Docker Maven avec JDK 21 pour construire l'application
+                    docker.image('maven:3.8-jdk-21').inside {
+                        dir('backend') {
+                            // Vérifier la version Maven et construire l'application
+                            sh 'mvn -version'
+                            sh 'mvn clean install'
+                        }
                     }
                 }
             }
@@ -29,10 +31,12 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Entrer dans le répertoire backend pour lancer les tests
-                    dir('backend') {
-                        // Lancer les tests
-                        sh 'mvn test'
+                    // Utiliser une image Docker Maven avec JDK 21 pour lancer les tests
+                    docker.image('maven:3.8-jdk-21').inside {
+                        dir('backend') {
+                            // Lancer les tests
+                            sh 'mvn test'
+                        }
                     }
                 }
             }
@@ -41,10 +45,12 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Entrer dans le répertoire backend pour analyser avec SonarQube
-                    dir('backend') {
-                        // Analyser le code avec SonarQube
-                        sh 'mvn sonar:sonar'
+                    // Utiliser une image Docker Maven avec JDK 21 pour analyser avec SonarQube
+                    docker.image('maven:3.8-jdk-21').inside {
+                        dir('backend') {
+                            // Analyser le code avec SonarQube
+                            sh 'mvn sonar:sonar'
+                        }
                     }
                 }
             }
