@@ -5,7 +5,7 @@ pipeline {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app"
 	SONARQUBE_URL = 'http://localhost:9000' // URL de votre serveur SonarQube
-        SONARQUBE_CREDENTIALS_ID = 'factorial-token' // L'ID des credentials pour le token SonarQube
+        SONARQUBE_CREDENTIALS_ID = 'jenkins-sonar' // L'ID des credentials pour le token SonarQube
 	    
     }
 
@@ -47,8 +47,8 @@ pipeline {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
 		
-                	withSonarQubeEnv(installationName: 'SonarQubeServer') {
-				sh "mvn clean verify sonar:sonar -Dsonar.projectKey=factorial -Dsonar.projectName='factorial'"
+                	withSonarQubeEnv(installationName: 'sq1') {
+				sh "mvn clean sonar:sonar"
 	                }
                 }
             }
