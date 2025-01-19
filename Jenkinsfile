@@ -32,16 +32,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven test
-                    script {
-                        // Lancer les tests
-                        sh 'mvn test'
-                    }
-                }
-            }
-        }
+        
 
 	stage('Compile') {
 	    steps {
@@ -53,6 +44,17 @@ pipeline {
 	    }
 	}
 
+	stage('Test') {
+            steps {
+                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven test
+                    script {
+                        // Lancer les tests
+                        sh 'mvn test'
+                    }
+                }
+            }
+        }
+	    
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
