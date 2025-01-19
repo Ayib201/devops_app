@@ -9,7 +9,7 @@ pipeline {
     }
 
     tools {
-        maven 'Maven 3.6'  // Le nom de l'outil Maven configuré
+        maven 'Maven 3.9'  // Le nom de l'outil Maven configuré
     }
 
     stages {
@@ -58,28 +58,45 @@ pipeline {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
                     withSonarQubeEnv(installationName: 'sq1') {
-                        sh "mvn clean sonar:sonar"
+                        script {
+                            sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
+                        }
                     }
                 }
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
-                    script {
-                        // Construire l'image Docker
-                        sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
-                    }
-                }
-            }
-        }
+        
 
-        stage('Deploy') {
+        //stage('Docker Build') {
+        //    steps {
+        //        dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
+        //            script {
+        //                // Construire l'image Docker
+        //                sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
+        //            }
+        //        }
+        //    }
+        //}
+
+        stage('Deploy Backend') {
             steps {
                 script {
-                    // Déployer sur AWS avec Docker
-                    sh 'docker run -d -p 8080:8080 $REGISTRY/$IMAGE_NAME'
+                    // Déployer l'application backend Spring Boot
+                    sh 'java -jar backend/target/factorial-app.jar &'
+                }
+            }
+        }
+
+        stage('Deploy Frontend') {
+            steps {
+                script {
+                    // Copier les fichiers du frontend (HTML, CSS, JS) dans le répertoire du serveur
+                    // Exemple pour un déploiement simple avec un serveur Apache ou Nginx
+                    sh '''
+                    mkdir -p /var/www/html/factorial-app
+                    cp -r frontend/* /var/www/html/factorial-app/
+                    '''
                 }
             }
         }
