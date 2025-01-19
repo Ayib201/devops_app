@@ -6,7 +6,7 @@ pipeline {
         IMAGE_NAME = "factorial-app"
         SONARQUBE_URL = 'http://host.docker.internal:9000' // URL de votre serveur SonarQube
         SONARQUBE_CREDENTIALS_ID = 'jenkins-sonar' // L'ID des credentials pour le token SonarQube
-        AWS_REGION = 'eu-west-3'  // Changer selon votre région AWS
+        AWS_REGION = 'eu-west-3c'  // Changer selon votre région AWS
     }
 
     tools {
