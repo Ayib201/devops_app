@@ -43,6 +43,16 @@ pipeline {
             }
         }
 
+	stage('Compile') {
+	    steps {
+	        dir('backend') {
+	            script {
+	                sh 'mvn clean compile'  // Compiler le projet
+	            }
+	        }
+	    }
+	}
+
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
