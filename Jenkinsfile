@@ -68,16 +68,16 @@ pipeline {
 
         
 
-        stage('Docker Build') {
-            steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
-                    script {
-                        // Construire l'image Docker
-                        sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
-                    }
-                }
-            }
-        }
+        //stage('Docker Build') {
+        //    steps {
+        //        dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
+        //            script {
+        //                // Construire l'image Docker
+        //                sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
+        //            }
+        //        }
+        //    }
+        //}
 
         stage('Deploy') {
             steps {
