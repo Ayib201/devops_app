@@ -3,7 +3,9 @@ pipeline {
 
     environment {
         REGISTRY = "mydockerhub/factorial-app"
-        IMAGE_NAME = "factorial-app" 
+        IMAGE_NAME = "factorial-app"
+	SONARQUBE_URL = 'http://localhost:9000' // URL de votre serveur SonarQube
+        SONARQUBE_CREDENTIALS_ID = 'factorial-token' // L'ID des credentials pour le token SonarQube
 	    
     }
 
