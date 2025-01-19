@@ -4,6 +4,7 @@ pipeline {
     environment {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app"
+        SONARQUBE_URL = "http://localhost:9000" 
     }
 
     tools {
@@ -43,9 +44,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
-                    script {
-                        // Analyser le code avec SonarQube
-                        sh 'mvn sonar:sonar'
+                    withSonarQubeEnv(credentialsId: 'factorial-token') {
+                        sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL'
                     }
                 }
             }
