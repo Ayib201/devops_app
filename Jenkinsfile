@@ -1,8 +1,6 @@
 pipeline {
     agent any
 
-    
-
     environment {
         REGISTRY = "mydockerhub/factorial-app"
         IMAGE_NAME = "factorial-app"
@@ -21,37 +19,45 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    // Vérifier la version Maven et construire l'application
-                    sh 'mvn -version'
-                    sh 'mvn clean install'
+                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven
+                    script {
+                        // Vérifier la version Maven et construire l'application
+                        sh 'mvn -version'
+                        sh 'mvn clean install'
+                    }
                 }
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    // Lancer les tests
-                    sh 'mvn test'
+                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven test
+                    script {
+                        // Lancer les tests
+                        sh 'mvn test'
+                    }
                 }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Analyser le code avec SonarQube
-                    sh 'mvn sonar:sonar'
+                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
+                    script {
+                        // Analyser le code avec SonarQube
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
 
         stage('Docker Build') {
             steps {
-                script {
-                    // Construire l'image Docker
-                    sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
+                dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
+                    script {
+                        // Construire l'image Docker
+                        sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
+                    }
                 }
             }
         }
