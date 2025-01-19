@@ -44,9 +44,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
-			def mvn = tool 'Default Maven';
+		
                 	withSonarQubeEnv(installationName: 'SonarQubeServer') {
-				sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=factorial -Dsonar.projectName='factorial'"
+				sh "mvn clean verify sonar:sonar -Dsonar.projectKey=factorial -Dsonar.projectName='factorial'"
 	                }
                 }
             }
