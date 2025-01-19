@@ -44,7 +44,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
-                    withSonarQubeEnv(installationName:: 'SonarQubeServer') {
+                    withSonarQubeEnv(installationName: 'SonarQubeServer') {
 			sh """
 	                    mvn clean verify sonar:sonar \
 	                    -Dsonar.projectKey=factorial \
