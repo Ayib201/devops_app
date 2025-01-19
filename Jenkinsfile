@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.8-jdk-21'
+            args '-v /root/.m2:/root/.m2'  // Pour persister le cache de Maven entre les builds
+        }
+    }
 
     environment {
         REGISTRY = "mydockerhub/factorial-app"
@@ -16,16 +21,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    echo "Début de la construction"
-                    // Utiliser une image Docker Maven avec JDK 21 pour construire l'application
-                    docker.image('maven:3.8-jdk-21').inside {
-                        dir('backend') {
-                            // Vérifier la version Maven et construire l'application
-                            sh 'mvn -version'
-                            sh 'mvn clean install'
-                        }
-                    }
-                    echo "Fin de la construction"
+                    // Vérifier la version Maven et construire l'application
+                    sh 'mvn -version'
+                    sh 'mvn clean install'
                 }
             }
         }
@@ -33,13 +31,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Utiliser une image Docker Maven avec JDK 21 pour lancer les tests
-                    docker.image('maven:3.8-jdk-21').inside {
-                        dir('backend') {
-                            // Lancer les tests
-                            sh 'mvn test'
-                        }
-                    }
+                    // Lancer les tests
+                    sh 'mvn test'
                 }
             }
         }
@@ -47,13 +40,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    // Utiliser une image Docker Maven avec JDK 21 pour analyser avec SonarQube
-                    docker.image('maven:3.8-jdk-21').inside {
-                        dir('backend') {
-                            // Analyser le code avec SonarQube
-                            sh 'mvn sonar:sonar'
-                        }
-                    }
+                    // Analyser le code avec SonarQube
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
