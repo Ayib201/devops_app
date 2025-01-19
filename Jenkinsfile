@@ -6,6 +6,7 @@ pipeline {
         IMAGE_NAME = "factorial-app"
         SONARQUBE_URL = 'http://host.docker.internal:9000' // URL de votre serveur SonarQube
         SONARQUBE_CREDENTIALS_ID = 'jenkins-sonar' // L'ID des credentials pour le token SonarQube
+        AWS_REGION = 'eu-west-3c'  // Changer selon votre région AWS
     }
 
     tools {
@@ -21,7 +22,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven
+                dir('backend') {
                     script {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
@@ -34,7 +35,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter Maven test
+                dir('backend') {
                     script {
                         // Lancer les tests
                         sh 'mvn test'
@@ -56,7 +57,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
+                dir('backend') {
                     withSonarQubeEnv(installationName: 'sq1') {
                         script {
                             sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
@@ -66,24 +67,28 @@ pipeline {
             }
         }
 
-        
-
-        //stage('Docker Build') {
-        //    steps {
-        //        dir('backend') {  // Aller dans le répertoire 'backend' avant de construire l'image Docker
-        //            script {
-        //                // Construire l'image Docker
-        //                sh 'docker build -t $REGISTRY/$IMAGE_NAME .'
-        //            }
-        //        }
-        //    }
-        //}
+        stage('Deploy Infrastructure with Terraform') {
+            steps {
+                script {
+                    // Utiliser Docker pour exécuter Terraform
+                    sh """
+                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest init
+                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest apply -auto-approve
+                    """
+                }
+            }
+        }
 
         stage('Deploy Backend') {
             steps {
                 script {
-                    // Déployer l'application backend Spring Boot
-                    sh 'java -jar backend/target/factorial-app.jar &'
+                    // Récupérer l'IP publique de l'instance et déployer l'application backend sur cette instance
+                    def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
+                    // Transférer le fichier JAR de l'application backend
+                    sh """
+                    scp -i /terraform/terraformkey.pem backend/target/factorial-app.jar ec2-user@$public_ip:/home/ec2-user/
+                    ssh -i /terraform/terraformkey.pem ec2-user@$public_ip 'nohup java -jar /home/ec2-user/factorial-app.jar &'
+                    """
                 }
             }
         }
@@ -91,12 +96,12 @@ pipeline {
         stage('Deploy Frontend') {
             steps {
                 script {
-                    // Copier les fichiers du frontend (HTML, CSS, JS) dans le répertoire du serveur
-                    // Exemple pour un déploiement simple avec un serveur Apache ou Nginx
-                    sh '''
-                    mkdir -p /var/www/html/factorial-app
-                    cp -r frontend/* /var/www/html/factorial-app/
-                    '''
+                    // Récupérer l'IP publique de l'instance et déployer les fichiers frontend
+                    def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
+                    // Copier les fichiers du frontend sur le serveur EC2
+                    sh """
+                    scp -i /terraform/terraformkey.pem -r frontend/* ec2-user@$public_ip:/var/www/html/factorial-app/
+                    """
                 }
             }
         }
