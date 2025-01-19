@@ -4,24 +4,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.groupeisi.factorial.service.FactorialService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.math.BigInteger;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class FactorialApplicationTests {
-
 
     private final FactorialService factorialService = new FactorialService();
 
     @Test
     void testCalculateFactorialPositive() {
-        assertEquals(120, factorialService.calculateFactorial(5));
+        assertEquals(BigInteger.valueOf(120), factorialService.calculateFactorial(5));
     }
 
     @Test
     void testCalculateFactorialZero() {
-        assertEquals(1, factorialService.calculateFactorial(0));
+        assertEquals(BigInteger.ONE, factorialService.calculateFactorial(0));
     }
 
     @Test
@@ -29,4 +28,9 @@ class FactorialApplicationTests {
         assertThrows(IllegalArgumentException.class, () -> factorialService.calculateFactorial(-1));
     }
 
+    @Test
+    void testCalculateFactorialLargeNumber() {
+        BigInteger expected = new BigInteger("2432902008176640000"); // 20!
+        assertEquals(expected, factorialService.calculateFactorial(20));
+    }
 }

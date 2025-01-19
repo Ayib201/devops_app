@@ -2,12 +2,20 @@ package com.groupeisi.factorial.service;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+
 @Service
 public class FactorialService {
-    public long calculateFactorial(int number) {
-        if (number == 0 || number == 1) {
-            return 1;
+
+    public BigInteger calculateFactorial(int number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("Factorial is not defined for negative numbers.");
         }
-        return number * calculateFactorial(number - 1);
+
+        BigInteger result = BigInteger.ONE;
+        for (int i = 2; i <= number; i++) {
+            result = result.multiply(BigInteger.valueOf(i));
+        }
+        return result;
     }
 }
