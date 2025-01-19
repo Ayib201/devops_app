@@ -28,7 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
-		<sonar.java.binaries>target/classes</sonar.java.binaries>  <!-- Ajoutez cette ligne -->
+		<sonar.java.binaries>${project.basedir}/target/classes</sonar.java.binaries>  <!-- Ajoutez cette ligne -->
 	</properties>
 	<dependencies>
 		<dependency>
