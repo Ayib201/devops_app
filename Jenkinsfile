@@ -44,8 +44,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 dir('backend') {  // Aller dans le répertoire 'backend' avant d'exécuter l'analyse SonarQube
-                    withSonarQubeEnv(credentialsId: 'factorial-token') {
-			sh "mvn sonar:sonar"
+                    withSonarQubeEnv(installationName:: 'SonarQubeServer') {
+			sh """
+	                    mvn clean verify sonar:sonar \
+	                    -Dsonar.projectKey=factorial \
+	                    -Dsonar.projectName='factorial' \
+	                    -Dsonar.host.url='http://localhost:9000'
+	                """
                     }
                 }
             }
