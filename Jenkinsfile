@@ -26,6 +26,7 @@ pipeline {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
                         sh 'mvn clean install'
+                        sh 'ls -l target' 
                     }
                 }
             }
