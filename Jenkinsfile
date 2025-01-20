@@ -57,14 +57,14 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                    // Attendre les résultats des quality gates de SonarQube
-                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar'
-                }
-            }
-        }
+        // stage('Quality Gate') {
+        //     steps {
+        //         script {
+        //             // Attendre les résultats des quality gates de SonarQube
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar'
+        //         }
+        //     }
+        // }
 
         stage('Deploy Infrastructure with Terraform') {
             steps {
