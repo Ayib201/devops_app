@@ -22,7 +22,6 @@ resource "aws_instance" "dev_instance" {
     sudo systemctl start docker
     sudo systemctl enable docker
     sudo apt-get install docker-compose -y
-    sudo chmod +x /usr/local/bin/docker-compose
     sudo apt-get install -y maven
     # Cloner le repo contenant les fichiers docker-compose
     cd /home/ubuntu
