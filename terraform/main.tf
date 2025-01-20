@@ -23,7 +23,7 @@ resource "aws_instance" "dev_instance" {
     sudo systemctl enable docker
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
-    apt-get install -y maven
+    sudo apt-get install -y maven
     # Cloner le repo contenant les fichiers docker-compose
     cd /home/ubuntu
     git clone https://github.com/Ayib201/devops_app
