@@ -6,7 +6,7 @@ resource "aws_instance" "dev_instance" {
   ami           = "ami-04b4f1a9cf54c11d0"  # Utilisez l'AMI appropriée pour votre région
   instance_type = "t2.micro"
   key_name = "Ubuntu"
-  security_groups = ["sg-007cf4ad48e36d5ef"]
+  security_groups = ["mon site"]
 
   tags = {
     Name = "serveur web devops"
