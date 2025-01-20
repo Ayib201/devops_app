@@ -26,7 +26,7 @@ pipeline {
                     script {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
-                        sh 'mvn clean compile'
+                        sh 'mvn clean install'
                         sh 'ls -l target' 
                     }
                 }
@@ -39,6 +39,16 @@ pipeline {
                     script {
                         // Lancer les tests
                         sh 'mvn test'
+                    }
+                }
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                dir('backend') {
+                    script {
+                        sh 'mvn clean compile'
                     }
                 }
             }
