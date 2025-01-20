@@ -61,20 +61,20 @@ pipeline {
             steps {
                 script {
                     sh 'ls -l target/'
-                }
-                nexusArtifactUploader artifacts: [[
-                    artifactId: 'factorial', 
-                    classifier: '', 
-                    file: 'target/factorial-0.0.1.jar', 
-                    type: 'jar'
-                ]], 
-                credentialsId: 'nexus', 
-                groupId: 'com.groupeisi', 
-                nexusUrl: 'host.docker.internal:8081', 
-                nexusVersion: 'nexus3', 
-                protocol: 'http', 
-                repository: 'nexus-release', 
-                version: '0.0.1'
+                    nexusArtifactUploader artifacts: [[
+                        artifactId: 'factorial', 
+                        classifier: '', 
+                        file: 'target/factorial-0.0.1.jar', 
+                        type: 'jar'
+                    ]], 
+                    credentialsId: 'nexus', 
+                    groupId: 'com.groupeisi', 
+                    nexusUrl: 'host.docker.internal:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: 'nexus-release', 
+                    version: '0.0.1'
+                 }
             }
         }
 
