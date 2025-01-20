@@ -22,6 +22,8 @@ user_data = <<-EOF
   sudo systemctl start docker
   sudo systemctl enable docker
   sudo apt-get install -y wget unzip
+  sudo curl -L "https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
 
   # Installation de Maven
   wget https://downloads.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
@@ -39,6 +41,7 @@ user_data = <<-EOF
 
   # Construction du projet avec Maven
   cd devops_app/backend
+  sudo apt install -y openjdk-21-jdk
   mvn clean install > /home/ubuntu/maven_install.log 2>&1
 
   # Lancer Docker Compose
