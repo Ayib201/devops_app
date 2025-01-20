@@ -1,12 +1,23 @@
-version: "3"
 services:
+  # Service pour le backend
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      - "8080:8080"  # Expose le port 8080 pour l'API backend
+    networks:
+      - app-network
+
+  # Service pour le frontend
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  # Make sure the path to your Dockerfile is correct
     ports:
-      - "80:80"
+      - "80:80"  # Expose port 80 for the frontend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
