@@ -3,6 +3,9 @@ services:
   backend:
     build:
       context: ./backend
+      args:
+        - NEXUS_USERNAME=admin
+        - NEXUS_PASSWORD=okok
     ports:
       - "8080:8080"  # Expose le port 8080 pour l'API backend
     networks:
