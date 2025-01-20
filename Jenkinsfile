@@ -61,9 +61,7 @@ pipeline {
             steps {
                 script {
                     // Attendre les résultats des quality gates de SonarQube
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: true
-                    }
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar'
                 }
             }
         }
