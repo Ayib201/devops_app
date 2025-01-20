@@ -42,7 +42,7 @@ user_data = <<-EOF
   # Construction du projet avec Maven
   cd devops_app/backend
   sudo apt install -y openjdk-21-jdk
-  mvn clean install
+  sudo mvn clean install
 
   # Lancer Docker Compose
   cd ..
