@@ -57,6 +57,17 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                script {
+                    // Attendre les résultats des quality gates de SonarQube
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
+
         stage('Deploy Infrastructure with Terraform') {
             steps {
                 script {
