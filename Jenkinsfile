@@ -59,6 +59,9 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
+                script {
+                    sh 'ls -l target/'
+                }
                 nexusArtifactUploader artifacts: [[
                     artifactId: 'factorial', 
                     classifier: '', 
