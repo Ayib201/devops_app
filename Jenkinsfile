@@ -26,7 +26,7 @@ pipeline {
                     script {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
-                        sh 'mvn clean install'
+                        sh 'mvn clean compile'
                         sh 'ls -l target' 
                     }
                 }
@@ -44,16 +44,6 @@ pipeline {
             }
         }
 
-        stage('Compile') {
-            steps {
-                dir('backend') {
-                    script {
-                        // Compiler le projet
-                        sh 'mvn clean compile'
-                    }
-                }
-            }
-        }
 
         stage('SonarQube Analysis') {
             steps {
