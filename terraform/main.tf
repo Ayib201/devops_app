@@ -30,10 +30,6 @@ user_data = <<-EOF
   sudo tar -xvzf apache-maven-3.9.9-bin.tar.gz -C /opt/
   sudo ln -s /opt/apache-maven-3.9.9/bin/mvn /usr/bin/mvn
 
-  # Configuration JAVA_HOME
-  export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-  export PATH=$JAVA_HOME/bin:$PATH
-
   # Cloner le repo contenant les fichiers docker-compose
   cd /home/ubuntu
   git clone https://github.com/Ayib201/devops_app
