@@ -26,7 +26,7 @@ pipeline {
                     script {
                         // Vérifier la version Maven et construire l'application
                         sh 'mvn -version'
-                        sh 'mvn clean install'
+                        sh 'mvn clean compile'
                         sh 'ls -l target' 
                     }
                 }
@@ -44,16 +44,6 @@ pipeline {
             }
         }
 
-        stage('Compile') {
-            steps {
-                dir('backend') {
-                    script {
-                        // Compiler le projet
-                        sh 'mvn clean compile'
-                    }
-                }
-            }
-        }
 
         stage('SonarQube Analysis') {
             steps {
@@ -63,6 +53,15 @@ pipeline {
                             sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
                         }
                     }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    // Attendre les résultats des quality gates de SonarQube
+                    waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar'
                 }
             }
         }
