@@ -3,32 +3,37 @@ package com.groupeisi.factorial.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        // Permet l'accès CORS depuis le domaine spécifique
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://127.0.0.1:5501")  // Autorise les requêtes venant de ce domaine
-                .allowedMethods("GET", "POST")  // Méthodes autorisées
-                .allowedHeaders("*");  // Permet tous les en-têtes
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+                .csrf(csrf -> csrf.disable());
+        return http.build();
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/api/**");  // Ignorer la sécurité pour l'API
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost");
+        config.addAllowedOrigin("http://127.0.0.1");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
-
-
-
-
-
 }
