@@ -12,26 +12,40 @@ resource "aws_instance" "dev_instance" {
     Name = "serveur web devops"
   }
 
-  user_data = <<-EOF
-    #!/bin/bash
-    sudo apt-get update -y
-    sudo apt-get upgrade -y
+user_data = <<-EOF
+  #!/bin/bash
+  sudo apt-get update -y
+  sudo apt-get upgrade -y
 
-  # Installation de Docker
-    sudo apt-get install -y docker.io
-    sudo systemctl start docker
-    sudo systemctl enable docker
-    sudo apt-get install docker-compose -y
-    sudo apt-get install -y maven
-    # Cloner le repo contenant les fichiers docker-compose
-    cd /home/ubuntu
-    git clone https://github.com/Ayib201/devops_app
-    cd devops_app
-    cd backend
-    mvn clean install
-    cd ..
-    sudo docker-compose up --build -d
-  EOF
+  # Installation de Docker et Docker Compose
+  sudo apt-get install -y docker.io
+  sudo systemctl start docker
+  sudo systemctl enable docker
+  sudo apt-get install -y wget unzip
+
+  # Installation de Maven
+  wget https://downloads.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+  sudo tar -xvzf apache-maven-3.9.9-bin.tar.gz -C /opt/
+  sudo ln -s /opt/apache-maven-3.9.9/bin/mvn /usr/bin/mvn
+
+  # Configuration JAVA_HOME
+  export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+  export PATH=$JAVA_HOME/bin:$PATH
+
+  # Cloner le repo contenant les fichiers docker-compose
+  cd /home/ubuntu
+  git clone https://github.com/Ayib201/devops_app
+  sudo chown -R ubuntu:ubuntu /home/ubuntu/devops_app
+
+  # Construction du projet avec Maven
+  cd devops_app/backend
+  mvn clean install > /home/ubuntu/maven_install.log 2>&1
+
+  # Lancer Docker Compose
+  cd ..
+  sudo docker-compose up --build -d
+EOF
+
 }
 
 output "instance_public_ip" {
