@@ -1,8 +1,3 @@
-provider "aws" {
-  region = "eu-west-3"
-  access_key = "AKIA6K5V7MK7WARAK34Y"
-  secret_key = "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"
-}
 
 resource "aws_instance" "dev_instance" {
   ami           = "ami-04b4f1a9cf54c11d0"  # Vérifiez l'AMI pour la région
@@ -41,6 +36,3 @@ resource "aws_instance" "dev_instance" {
   EOF
 }
 
-output "instance_public_ip" {
-  value = aws_instance.dev_instance.public_ip
-}
