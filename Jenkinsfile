@@ -136,15 +136,57 @@ pipeline {
                 }   
         }
         
-        //  stage('Push to DockerHub') {
-        //     steps {
-        //         script {
-        //             // Push both version tag and latest
-        //             sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
-        //             sh "docker push ${DOCKER_IMAGE}:latest"
-        //         }
-        //     }
-        // }
+        stage('Terraform Init') {
+            steps {
+                script {
+                    // Initialiser Terraform
+                    sh 'terraform init'
+                }
+            }
+        }
+        stage('Terraform Plan') {
+            steps {
+                script {
+                    // Voir les changements à appliquer (utile pour debug)
+                    sh 'terraform plan'
+                }
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    // Appliquer la configuration Terraform pour déployer l'instance
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+        stage('Docker Login') {
+            steps {
+                withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKERHUB_TOKEN')]) {
+                    script {
+                        sh "echo \$DOCKERHUB_TOKEN | docker login -u julesbestdev176 --password-stdin"
+                    }
+                }
+            }
+        }
+        stage('Deploy Application') {
+            steps {
+                script {
+                    // Après avoir créé l'instance, déployez l'application via Docker
+                    def public_ip = sh(script: "terraform output -raw instance_public_ip", returnStdout: true).trim()
+
+                    // Cloner le dépôt et lancer Docker Compose
+                    sh """
+                    ssh -i /path/to/your/key.pem ubuntu@$public_ip << EOF
+                    cd /home/ubuntu
+                    git clone https://github.com/Ayib201/devops_app
+                    cd devops_app
+                    sudo docker-compose up --build -d
+                    EOF
+                    """
+                }
+            }
+        }
 
     
 
