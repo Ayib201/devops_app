@@ -108,7 +108,7 @@ pipeline {
         stage('Login to DockerHub') {
             steps {
                 // Login using access token
-                sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_TOKEN_USR --password-stdin'
+                sh "echo ${DOCKERHUB_TOKEN} | docker login -u ${DOCKERHUB_TOKEN_USR} --password-stdin"
             }
         }
         
