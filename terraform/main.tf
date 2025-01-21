@@ -31,14 +31,11 @@ user_data = <<-EOF
   sudo systemctl start docker
   sudo systemctl enable docker
   sudo docker pull julesbestdev176/factorial
+  sudo docker run -d -p 8080:8080 --name factorial-app julesbestdev176/factorial
 
   # Cloner le repo contenant les fichiers docker-compose
   cd /home/ubuntu
   git clone https://github.com/Ayib201/devops_app
-  docker pull julesbestdev176/factorial:latest
-
-  # Lancer Docker Compose
-  cd ..
   sudo docker-compose up --build -d
 EOF
 
