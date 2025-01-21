@@ -139,25 +139,31 @@ pipeline {
         
         stage('Terraform Init') {
             steps {
-                script {
+                dir('backend') {
+                    script {
                     // Initialiser Terraform
-                    sh 'terraform init'
+                        sh 'terraform init'
+                    }
                 }
             }
         }
         stage('Terraform Plan') {
             steps {
-                script {
-                    // Voir les changements à appliquer (utile pour debug)
-                    sh 'terraform plan'
+                dir('backend') {
+                    script {
+                        // Voir les changements à appliquer (utile pour debug)
+                        sh 'terraform plan'
+                    }
                 }
             }
         }
         stage('Terraform Apply') {
             steps {
-                script {
-                    // Appliquer la configuration Terraform pour déployer l'instance
-                    sh 'terraform apply -auto-approve'
+                dir('backend') {
+                    script {
+                        // Appliquer la configuration Terraform pour déployer l'instance
+                        sh 'terraform apply -auto-approve'
+                    }
                 }
             }
         }
