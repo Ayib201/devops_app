@@ -28,7 +28,7 @@ user_data = <<-EOF
   # Cloner le repo contenant les fichiers docker-compose
   cd /home/ubuntu
   git clone https://github.com/Ayib201/devops_app
-  sudo chown -R ubuntu:ubuntu /home/ubuntu/devops_app
+  docker pull julesbestdev176/factorial:latest
 
   # Lancer Docker Compose
   cd ..
