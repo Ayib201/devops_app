@@ -7,7 +7,7 @@ provider "aws" {
 resource "aws_instance" "dev_instance" {
   ami           = "ami-06e02ae7bdac6b938"  # Vérifiez l'AMI pour la région
   instance_type = "t2.micro"
-  key_name      = ""                # Assurez-vous que cette clé SSH existe
+               # Assurez-vous que cette clé SSH existe
   security_groups = ["mon site"]          # Groupe de sécurité avec règles appropriées
 
   tags = {
