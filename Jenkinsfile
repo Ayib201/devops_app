@@ -14,8 +14,7 @@ pipeline {
     }
 
     tools {
-        maven 'Maven 3.9'  // Le nom de l'outil Maven configuré
-        docker 'doc'
+        maven 'Maven 3.9'  // Le nom de l'outil Maven configure
     }
 
     stages {
