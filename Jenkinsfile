@@ -10,8 +10,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub' // ID des credentials configurés dans Jenkins
         DOCKER_IMAGE = 'julesbestdev176/factorial' // Nom de l'image Docker (DockerHub username/image)
         DOCKER_TAG = 'latest' // Tag de l'image
-        DOCKERHUB_TOKEN_USR = 'julesbestdev176'
-        DOCKERHUB_TOKEN = credentials('dockerhub')
+        
     }
 
     tools {
@@ -108,7 +107,12 @@ pipeline {
         stage('Login to DockerHub') {
             steps {
                 // Login using access token
-                sh "echo ${DOCKERHUB_TOKEN} | docker login -u ${DOCKERHUB_TOKEN_USR} --password-stdin"
+                withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKERHUB_TOKEN')]) {
+                    script {
+                        // Connexion DockerHub avec le token sécurisé
+                        sh "echo \$DOCKERHUB_TOKEN | docker login -u julesbestdev176 --password-stdin"
+                    }
+                }
             }
         }
         
