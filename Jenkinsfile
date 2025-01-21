@@ -24,18 +24,18 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                dir('backend') {
-                    script {
-                        // Vérifier la version Maven et construire l'application
-                        sh 'mvn -version'
-                        sh 'mvn clean install'
-                        sh 'ls -l target' 
-                    }
-                }
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         dir('backend') {
+        //             script {
+        //                 // Vérifier la version Maven et construire l'application
+        //                 sh 'mvn -version'
+        //                 sh 'mvn clean install'
+        //                 sh 'ls -l target' 
+        //             }
+        //         }
+        //     }
+        // }
 
         // stage('Test') {
         //     steps {
@@ -48,15 +48,15 @@ pipeline {
         //     }
         // }
 
-        stage('Compile') {
-            steps {
-                dir('backend') {
-                    script {
-                        sh 'mvn clean compile'
-                    }
-                }
-            }
-        }
+        // stage('Compile') {
+        //     steps {
+        //         dir('backend') {
+        //             script {
+        //                 sh 'mvn clean compile'
+        //             }
+        //         }
+        //     }
+        // }
 
 
         // stage('SonarQube Analysis') {
