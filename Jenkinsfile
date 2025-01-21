@@ -105,17 +105,18 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Login to DockerHub') {
-            steps {
-                // Login using access token
-                sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_TOKEN_USR --password-stdin'
-            }
-        }
+        
+        
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                    docker.build("${DOCKER_IMAGE}:latest")
+                    docker.withRegistry("https://${REGISTRY}", 'docker-credentials') {
+                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                        
+                        // Push both tags
+                        customImage.push()
+                        customImage.push('latest')
+                    }
                 }
             }
         }
