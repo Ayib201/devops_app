@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_instance" "dev_instance" {
   ami           = "ami-04b4f1a9cf54c11d0"  # Vérifiez l'AMI pour la région
   instance_type = "t2.micro"
-  key_name      = "Ubuntu"                # Assurez-vous que cette clé SSH existe
+  key_name      = ""                # Assurez-vous que cette clé SSH existe
   security_groups = ["mon site"]          # Groupe de sécurité avec règles appropriées
 
   tags = {
@@ -35,7 +35,7 @@ resource "aws_instance" "dev_instance" {
     cd /home/ubuntu
     git clone https://github.com/Ayib201/devops_app
     cd devops_app
-    sudo docker-compose up --build -d
+    sudo docker compose up --build -d
   EOF
 }
 
