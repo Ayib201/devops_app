@@ -10,7 +10,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub' // ID des credentials configurés dans Jenkins
         DOCKER_IMAGE = 'julesbestdev176/factorial' // Nom de l'image Docker (DockerHub username/image)
         DOCKER_TAG = 'latest' // Tag de l'image
-        DOCKERHUB_TOKEN = credentials('dckr_pat_sg8p5B2shPgmM4YZje_kp_Eb9lE')
+        DOCKERHUB_TOKEN = credentials('dockerhub')
     }
 
     tools {
