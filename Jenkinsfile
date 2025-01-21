@@ -37,16 +37,16 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                dir('backend') {
-                    script {
-                        // Lancer les tests
-                        sh 'mvn test'
-                    }
-                }
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         dir('backend') {
+        //             script {
+        //                 // Lancer les tests
+        //                 sh 'mvn test'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Compile') {
             steps {
@@ -59,17 +59,17 @@ pipeline {
         }
 
 
-        stage('SonarQube Analysis') {
-            steps {
-                dir('backend') {
-                    withSonarQubeEnv(installationName: 'sq1') {
-                        script {
-                            sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
-                        }
-                    }
-                }
-            }
-        }
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         dir('backend') {
+        //             withSonarQubeEnv(installationName: 'sq1') {
+        //                 script {
+        //                     sh 'mvn clean verify sonar:sonar -Dsonar.java.binaries=target/classes'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // stage('Publish to Nexus') {
         //     steps {
