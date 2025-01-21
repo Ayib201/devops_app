@@ -10,6 +10,8 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub' // ID des credentials configurés dans Jenkins
         DOCKER_IMAGE = 'julesbestdev176/factorial' // Nom de l'image Docker (DockerHub username/image)
         DOCKER_TAG = 'latest' // Tag de l'image
+        ACCESS_KEY = 'AKIA2MNVL5UCHV3FXEAM'
+        SECRET_ACCESS_KEY = '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'
         
     }
 
@@ -152,6 +154,8 @@ pipeline {
                 dir('terraform') {
                     script {
                         // Voir les changements à appliquer (utile pour debug)
+                        export AWS_ACCESS_KEY_ID=$ACCESS_KEY
+                        export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
                         sh 'terraform plan'
                     }
                 }
