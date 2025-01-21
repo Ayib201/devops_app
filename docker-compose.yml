@@ -1,13 +1,4 @@
 services:
-  # Service pour le backend
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8080:8080"  # Expose le port 8080 pour l'API backend
-    networks:
-      - app-network
-
   # Service pour le frontend
   frontend:
     build:
