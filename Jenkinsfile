@@ -7,6 +7,10 @@ pipeline {
         SONARQUBE_URL = 'http://host.docker.internal:9000' // URL de votre serveur SonarQube
         SONARQUBE_CREDENTIALS_ID = 'jenkins-sonar' // L'ID des credentials pour le token SonarQube
         AWS_REGION = 'eu-west-3c'  // Changer selon votre région AWS
+        DOCKERHUB_CREDENTIALS = 'dockerhub' // ID des credentials configurés dans Jenkins
+        DOCKER_IMAGE = 'julesbestdev176/factorial' // Nom de l'image Docker (DockerHub username/image)
+        DOCKER_TAG = 'latest' // Tag de l'image
+        DOCKERHUB_TOKEN = credentials('dckr_pat_sg8p5B2shPgmM4YZje_kp_Eb9lE')
     }
 
     tools {
@@ -98,32 +102,46 @@ pipeline {
         //         }
         //     }
         // }
-
-        stage('Deploy Infrastructure with Terraform') {
+        stage('Login to DockerHub') {
+            steps {
+                // Login using access token
+                sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_TOKEN_USR --password-stdin'
+            }
+        }
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Utiliser Docker pour exécuter Terraform
-                    sh """
-                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest init
-                    docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest apply -auto-approve
-                    """
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    docker.build("${DOCKER_IMAGE}:latest")
+                }
+            }
+        }
+        
+         stage('Push to DockerHub') {
+            steps {
+                script {
+                    // Push both version tag and latest
+                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    sh "docker push ${DOCKER_IMAGE}:latest"
                 }
             }
         }
 
-        stage('Deploy Backend') {
-            steps {
-                script {
-                    // Récupérer l'IP publique de l'instance et déployer l'application backend sur cette instance
-                    def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
-                    // Transférer le fichier JAR de l'application backend
-                    sh """
-                    scp -i /terraform/terraformkey.pem backend/target/factorial-app.jar ec2-user@$public_ip:/home/ec2-user/
-                    ssh -i /terraform/terraformkey.pem ec2-user@$public_ip 'nohup java -jar /home/ec2-user/factorial-app.jar &'
-                    """
-                }
-            }
-        }
+    
+
+        // stage('Deploy Backend') {
+        //     steps {
+        //         script {
+        //             // Récupérer l'IP publique de l'instance et déployer l'application backend sur cette instance
+        //             def public_ip = sh(script: "docker run --rm -v \$(pwd)/terraform:/workspace -w /workspace hashicorp/terraform:latest output -raw public_ip", returnStdout: true).trim()
+        //             // Transférer le fichier JAR de l'application backend
+        //             sh """
+        //             scp -i /terraform/terraformkey.pem backend/target/factorial-app.jar ec2-user@$public_ip:/home/ec2-user/
+        //             ssh -i /terraform/terraformkey.pem ec2-user@$public_ip 'nohup java -jar /home/ec2-user/factorial-app.jar &'
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Deploy Frontend') {
             steps {
