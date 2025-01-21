@@ -105,26 +105,21 @@ pipeline {
         //     }
         // }
 
-        stage('Login to DockerHub') {
-            steps {
-                // Login using access token
-                sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_TOKEN_USR --password-stdin'
-            }
-        }
-        
-        // stage('Build Docker Image') {
+        // stage('Login to DockerHub') {
         //     steps {
-        //         script {
-        //             docker.withRegistry("https://${REGISTRY}", 'docker-credentials') {
-        //                 def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
-                        
-        //                 // Push both tags
-        //                 customImage.push()
-        //                 customImage.push('latest')
-        //             }
-        //         }
+        //         // Login using access token
+        //         sh 'echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_TOKEN_USR --password-stdin'
         //     }
         // }
+        
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t $DOCKER_IMAGE:$DOCKER_TAG"
+                }
+            }
+        }
         
         //  stage('Push to DockerHub') {
         //     steps {
