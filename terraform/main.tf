@@ -11,7 +11,7 @@ resource "aws_instance" "dev_instance" {
   tags = {
     Name = "serveur web devops"
   }
-
+docker pull julesbestdev176/factorial:latest
 user_data = <<-EOF
   #!/bin/bash
   sudo apt-get update -y
@@ -25,20 +25,10 @@ user_data = <<-EOF
   sudo curl -L "https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
 
-  # Installation de Maven
-  wget https://downloads.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
-  sudo tar -xvzf apache-maven-3.9.9-bin.tar.gz -C /opt/
-  sudo ln -s /opt/apache-maven-3.9.9/bin/mvn /usr/bin/mvn
-
   # Cloner le repo contenant les fichiers docker-compose
   cd /home/ubuntu
   git clone https://github.com/Ayib201/devops_app
   sudo chown -R ubuntu:ubuntu /home/ubuntu/devops_app
-
-  # Construction du projet avec Maven
-  cd devops_app/backend
-  sudo apt install -y openjdk-21-jdk
-  sudo mvn clean install
 
   # Lancer Docker Compose
   cd ..
