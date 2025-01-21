@@ -139,7 +139,7 @@ pipeline {
         
         stage('Terraform Init') {
             steps {
-                dir('backend') {
+                dir('terraform') {
                     script {
                     // Initialiser Terraform
                         sh 'terraform init'
@@ -149,7 +149,7 @@ pipeline {
         }
         stage('Terraform Plan') {
             steps {
-                dir('backend') {
+                dir('terraform') {
                     script {
                         // Voir les changements à appliquer (utile pour debug)
                         sh 'terraform plan'
@@ -159,7 +159,7 @@ pipeline {
         }
         stage('Terraform Apply') {
             steps {
-                dir('backend') {
+                dir('terraform') {
                     script {
                         // Appliquer la configuration Terraform pour déployer l'instance
                         sh 'terraform apply -auto-approve'
